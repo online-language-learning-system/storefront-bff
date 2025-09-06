@@ -9,11 +9,13 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: http://localhost:8080/realms/CourseRealm
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/CourseRealm}
         registration:
           keycloak:
+            provider: keycloak
             client-id: storefront-bff
-            client-secret: 1eS0CkrKODjVc6eeGbXZtwBVuOcTAan8
+            client-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:9rNfw1rg6itRh24yWt4IXtiLd4Yv2fft}
+            # redirect-uri: ${SELF_URL}/login/oauth2/code/storefront-bff
             scope: openid, profile, email, roles
   data:
     redis:
@@ -28,14 +30,14 @@ spring:
         - SaveSession
       routes:
         - id: user-service
-          uri: http://localhost:9000
+          uri: ${USER_SERVICE_URI:http://localhost:9000}
           predicates:
             - Path=/storefront/**,/backoffice/**
           filters:
             - TokenRelay
 
 
-keycloak:
+serviceUri:
   services:
-    user_service: http://localhost:9000
-    token-identity: http://localhost:8080/realms/CourseRealm/protocol/openid-connect/token
+    user-service: ${USER_SERVICE_URI:http://localhost:9000}
+    token-identity: ${KEYCLOAK_TOKEN_URI:http://localhost:8080/realms/CourseRealm/protocol/openid-connect/token}

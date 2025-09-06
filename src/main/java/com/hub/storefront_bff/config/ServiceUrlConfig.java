@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Map;
 
-@ConfigurationProperties(value = "keycloak")
+@ConfigurationProperties(value = "serviceUri")
 public record ServiceUrlConfig (
    Map<String, String> services
 ){ }
