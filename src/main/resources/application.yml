@@ -26,6 +26,13 @@ spring:
 
   cloud:
     gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "http://identity:8080"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+            allowCredentials: true
       default-filters:
         - SaveSession
       routes:

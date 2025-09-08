@@ -102,3 +102,9 @@ public class SecurityConfig {
             .collect(Collectors.toList());
     }
 }
+
+/*
+        If you build a web app with session + cookies, enable CSRF for protection.
+        If you build a REST API with JWT/OAuth2, disable CSRF because it's unnecessary
+    and will cause errors when calling the API.
+*/
