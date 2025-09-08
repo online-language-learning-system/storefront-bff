@@ -38,8 +38,11 @@ public class SecurityConfig {
         return serverHttpSecurity
                 .authorizeExchange(
                     authorizeExchangeSpec ->
-                        authorizeExchangeSpec.pathMatchers("/login/**", "/oauth2/**").permitAll()
+                        authorizeExchangeSpec
+                                .pathMatchers("/storefront/users").permitAll()
+                                .pathMatchers("/login/**", "/oauth2/**").permitAll()
                                             .anyExchange().authenticated())
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)     // Turn off CSRF when using RestAPI
                 .oauth2Login(Customizer.withDefaults())
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .logout(logoutSpec -> logoutSpec.logoutSuccessHandler(oidcLogoutSuccessHandler()))
