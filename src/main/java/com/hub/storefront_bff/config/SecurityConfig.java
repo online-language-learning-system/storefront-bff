@@ -27,10 +27,10 @@ public class SecurityConfig {
     private static final String ROLES_CLAIM = "roles";
     private static final String PREFIX = "ROLE_";
 
-    private final ReactiveClientRegistrationRepository clientRegistrationRepository;
+    private final ReactiveClientRegistrationRepository reactiveClientRegistrationRepository;
 
     public SecurityConfig(ReactiveClientRegistrationRepository clientRegistrationRepository) {
-        this.clientRegistrationRepository = clientRegistrationRepository;
+        this.reactiveClientRegistrationRepository = clientRegistrationRepository;
     }
 
     @Bean
@@ -53,10 +53,11 @@ public class SecurityConfig {
 
     private ServerLogoutSuccessHandler oidcLogoutSuccessHandler() {
         OidcClientInitiatedServerLogoutSuccessHandler oidcClientInitiatedServerLogoutSuccessHandler =
-                new OidcClientInitiatedServerLogoutSuccessHandler(this.clientRegistrationRepository);
-        String postLogoutRedirectUri = "{baseUrl}";
+                new OidcClientInitiatedServerLogoutSuccessHandler(this.reactiveClientRegistrationRepository);
+        String postLogoutRedirectUri = "{baseUrl}"; // {baseUrl} = scheme (http/https) + host + port + contextPath
         oidcClientInitiatedServerLogoutSuccessHandler.setPostLogoutRedirectUri(postLogoutRedirectUri);
         return oidcClientInitiatedServerLogoutSuccessHandler;
+
     }
 
 
