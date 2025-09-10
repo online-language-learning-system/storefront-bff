@@ -1,8 +1,11 @@
 package com.hub.storefront_bff;
 
+import com.hub.storefront_bff.config.ServiceUrlConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableConfigurationProperties(ServiceUrlConfig.class)
 @SpringBootApplication
 public class StorefrontBffApplication {
 

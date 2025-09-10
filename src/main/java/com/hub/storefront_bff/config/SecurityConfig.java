@@ -39,9 +39,11 @@ public class SecurityConfig {
                 .authorizeExchange(
                     authorizeExchangeSpec ->
                         authorizeExchangeSpec
-                                .pathMatchers("/storefront/users").permitAll()
-                                .pathMatchers("/login/**", "/oauth2/**").permitAll()
-                                            .anyExchange().authenticated())
+                            .pathMatchers("/storefront/users", "/get-token").permitAll()
+                            .pathMatchers("/login/**", "/oauth2/**").permitAll()
+                            .pathMatchers("/storefront/user/profile").authenticated()
+                            .anyExchange().permitAll()
+                )
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)     // Turn off CSRF when using RestAPI
                 .oauth2Login(Customizer.withDefaults())
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
@@ -90,7 +92,6 @@ public class SecurityConfig {
                     mappedAuthorities.addAll(generateAuthoritiesFromClaim(roles));
                 }
             }
-
 
             return mappedAuthorities;
         };
