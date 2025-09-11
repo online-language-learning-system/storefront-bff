@@ -11,10 +11,10 @@ spring:
           keycloak:
             issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/CourseRealm}
         registration:
-          keycloak:
+          keycloak:   # registrationId
             provider: keycloak
             client-id: storefront-bff
-            client-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:XljBWoGzc215LCKgNp7Ml5BgjQPJam3W}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:okuONdlbOa8WuTAzeb23tVwPAObA4RUd}
             # redirect-uri: ${SELF_URL}/login/oauth2/code/storefront-bff
             scope: openid, profile, email, roles
   data:
@@ -26,15 +26,15 @@ spring:
 
   cloud:
     gateway:
-      globalcors:
-        corsConfigurations:
-          '[/**]':
-            allowedOrigins: "http://identity:8080"
-            allowedMethods: "*"
-            allowedHeaders: "*"
-            allowCredentials: true
-      default-filters:
-        - SaveSession
+#      globalcors:
+#        corsConfigurations:
+#          '[/**]':
+#            allowedOrigins: "http://identity:8080"
+#            allowedMethods: "*"
+#            allowedHeaders: "*"
+#            allowCredentials: true
+#      default-filters:
+#        - SaveSession
       routes:
         - id: user-service
           uri: ${USER_SERVICE_URI:http://localhost:9000}
@@ -43,10 +43,28 @@ spring:
           filters:
             - TokenRelay
 
+        # http://localhost:8000/api/course-service/storefront/courses
+        - id: course-service
+          uri: ${COURSE_SERVICE_URI:http://localhost:9002}
+          predicates:
+            - Path=/api/course-service/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1  # StripPrefix=n removes the first n path segments before forwarding the request.
+
+        - id: storefront
+          uri: http://localhost:5173
+          predicates:
+            - Path=/**
+
 
 service-uri:
   services:
     user-service: ${USER_SERVICE_URI:http://localhost:9000}
     token-identity: ${KEYCLOAK_TOKEN_URI:http://localhost:8080/realms/CourseRealm/protocol/openid-connect/token}
   token-id: storefront-bff
-  token-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:XljBWoGzc215LCKgNp7Ml5BgjQPJam3W}
+  token-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:okuONdlbOa8WuTAzeb23tVwPAObA4RUd}
+
+logging:
+  level:
+    org.springframework.security: DEBUG

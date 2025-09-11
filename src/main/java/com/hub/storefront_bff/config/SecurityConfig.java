@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.authentication.logout.ServerLogoutSuccessHandler;
 
 import java.util.*;
@@ -39,14 +41,15 @@ public class SecurityConfig {
                 .authorizeExchange(
                     authorizeExchangeSpec ->
                         authorizeExchangeSpec
-                            .pathMatchers("/storefront/users", "/get-token").permitAll()
-                            .pathMatchers("/login/**", "/oauth2/**").permitAll()
                             .pathMatchers("/storefront/user/profile").authenticated()
                             .anyExchange().permitAll()
                 )
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)     // Turn off CSRF when using RestAPI
-                .oauth2Login(Customizer.withDefaults())
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)   // Disable HTTP Basic auth (we only use Bearer JWT tokens)
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)             // Disable CSRF when using RestAPI
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+
+                .oauth2Login(Customizer.withDefaults())                 // With Customizer.withDefaults() in OAuth2
+                                                                        // OAuth2 Login flow = /oauth2/authorization/{registrationId} to Login URL
                 .logout(logoutSpec -> logoutSpec.logoutSuccessHandler(oidcLogoutSuccessHandler()))
                 .build();
     }
@@ -54,13 +57,11 @@ public class SecurityConfig {
     private ServerLogoutSuccessHandler oidcLogoutSuccessHandler() {
         OidcClientInitiatedServerLogoutSuccessHandler oidcClientInitiatedServerLogoutSuccessHandler =
                 new OidcClientInitiatedServerLogoutSuccessHandler(this.reactiveClientRegistrationRepository);
-        String postLogoutRedirectUri = "{baseUrl}"; // {baseUrl} = scheme (http/https) + host + port + contextPath
+        String postLogoutRedirectUri = "{baseUrl}/home"; // {baseUrl} = scheme (http/https) + host + port + contextPath
         oidcClientInitiatedServerLogoutSuccessHandler.setPostLogoutRedirectUri(postLogoutRedirectUri);
         return oidcClientInitiatedServerLogoutSuccessHandler;
 
     }
-
-
 
     // Role-based access control (need to map authorities from Keycloak to Spring Security)
     @Bean
