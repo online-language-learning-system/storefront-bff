@@ -13,7 +13,8 @@ public class CorsConfig {
     @Bean
     public CorsWebFilter corsWebFilter() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("http://localhost:5173");
+        config.addAllowedOriginPattern("http://localhost:3000");            // Local FE
+        config.addAllowedOriginPattern("http://storefront-reactjs:80");     // Container FE
         config.addAllowedOriginPattern("http://identity:8080");
         config.addAllowedMethod("*"); // GET, POST, PUT, DELETE, OPTIONS
         config.addAllowedHeader("*");

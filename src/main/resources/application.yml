@@ -9,7 +9,7 @@ spring:
       client:
         provider:
           keycloak:
-            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/CourseRealm}
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://identity:8080/realms/CourseRealm}
         registration:
           keycloak:   # registrationId
             provider: keycloak
@@ -53,15 +53,17 @@ spring:
             - StripPrefix=1  # StripPrefix=n removes the first n path segments before forwarding the request.
 
         - id: storefront
-          uri: http://localhost:5173
+          uri: ${STOREFRONT_REACTJS_URI:http://localhost:3000}
           predicates:
             - Path=/**
+#          filters:
+#            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
 
 service-uri:
   services:
     user-service: ${USER_SERVICE_URI:http://localhost:9000}
-    token-identity: ${KEYCLOAK_TOKEN_URI:http://localhost:8080/realms/CourseRealm/protocol/openid-connect/token}
+    token-identity: ${KEYCLOAK_TOKEN_URI:http://identity:8080/realms/CourseRealm/protocol/openid-connect/token}
   token-id: storefront-bff
   token-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:okuONdlbOa8WuTAzeb23tVwPAObA4RUd}
 
