@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: storefront_bff
+  profiles:
+    active: dev
   security:
     oauth2:
       client:
@@ -24,15 +26,14 @@ spring:
     session:
       store-type: redis
 
+---
+
+spring:
+  config:
+    active:
+      on-profile: "dev"
   cloud:
     gateway:
-#      globalcors:
-#        corsConfigurations:
-#          '[/**]':
-#            allowedOrigins: "http://identity:8080"
-#            allowedMethods: "*"
-#            allowedHeaders: "*"
-#            allowCredentials: true
 #      default-filters:
 #        - SaveSession
       routes:
@@ -52,6 +53,14 @@ spring:
             - TokenRelay
             - StripPrefix=1  # StripPrefix=n removes the first n path segments before forwarding the request.
 
+        - id: api
+          uri: http://api.hajime.local
+          predicates:
+            - Path=/api/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+
         - id: storefront
           uri: ${STOREFRONT_REACTJS_URI:http://localhost:3000}
           predicates:
@@ -59,6 +68,14 @@ spring:
 #          filters:
 #            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
+---
+
+spring:
+  config:
+    active:
+      on-profile: "prod"
+
+---
 
 service-uri:
   services:
