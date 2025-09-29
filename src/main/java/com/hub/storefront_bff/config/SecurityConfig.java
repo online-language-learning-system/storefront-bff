@@ -45,9 +45,9 @@ public class SecurityConfig {
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)   // Disable HTTP Basic auth (we only use Bearer JWT tokens)
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)             // Disable CSRF when using RestAPI
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-
                 .oauth2Login(Customizer.withDefaults())                 // With Customizer.withDefaults() in OAuth2
                                                                         // OAuth2 Login flow = /oauth2/authorization/{registrationId} to Login URL
+
                 .logout(logoutSpec -> logoutSpec.logoutSuccessHandler(oidcLogoutSuccessHandler()))
                 .build();
     }
@@ -60,6 +60,7 @@ public class SecurityConfig {
         return oidcClientInitiatedServerLogoutSuccessHandler;
 
     }
+
 
     // Role-based access control (need to map authorities from Keycloak to Spring Security)
     @Bean
@@ -96,6 +97,7 @@ public class SecurityConfig {
             return mappedAuthorities;
         };
     }
+
 
     private Collection<GrantedAuthority> generateAuthoritiesFromClaim(Collection<String> roles) {
         return roles.stream()

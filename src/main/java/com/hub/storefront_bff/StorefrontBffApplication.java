@@ -5,8 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@EnableConfigurationProperties(ServiceUrlConfig.class)
 @SpringBootApplication
+@EnableConfigurationProperties(ServiceUrlConfig.class)
 public class StorefrontBffApplication {
 
 	public static void main(String[] args) {

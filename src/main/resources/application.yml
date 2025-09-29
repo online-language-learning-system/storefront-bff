@@ -4,8 +4,8 @@ server:
 spring:
   application:
     name: storefront_bff
-  profiles:
-    active: dev
+#  profiles:
+#    active: prod
   security:
     oauth2:
       client:
@@ -19,63 +19,52 @@ spring:
             client-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:okuONdlbOa8WuTAzeb23tVwPAObA4RUd}
             # redirect-uri: ${SELF_URL}/login/oauth2/code/storefront-bff
             scope: openid, profile, email, roles
-  data:
-    redis:
-      host: localhost
-      port: 6379
-    session:
-      store-type: redis
 
----
-
-spring:
-  config:
-    active:
-      on-profile: "dev"
   cloud:
     gateway:
-#      default-filters:
-#        - SaveSession
+      default-filters:
+        - SaveSession
       routes:
-        - id: user-service
+        - id: user
           uri: ${USER_SERVICE_URI:http://localhost:9000}
-          predicates:
-            - Path=/storefront/**,/backoffice/**
-          filters:
-            - TokenRelay
-
-        # http://localhost:8000/api/course-service/storefront/courses
-        - id: course-service
-          uri: ${COURSE_SERVICE_URI:http://localhost:9002}
-          predicates:
-            - Path=/api/course-service/**
-          filters:
-            - TokenRelay
-            - StripPrefix=1  # StripPrefix=n removes the first n path segments before forwarding the request.
-
-        - id: api
-          uri: http://api.hajime.local
           predicates:
             - Path=/api/**
           filters:
             - TokenRelay
             - StripPrefix=1
-
-        - id: storefront
+        - id: cart
+          uri: ${CART_SERVICE_URI:http://localhost:9001}
+          predicates:
+            - Path=/api/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+        - id: course
+          uri: ${COURSE_SERVICE_URI:http://localhost:9002}
+          predicates:
+            - Path=/api/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+#        - id: api
+#          uri: http://api.hajime.local
+#          predicates:
+#            - Path=/api/**
+#          filters:
+#            - TokenRelay
+#            - StripPrefix=1
+        - id: reactjs
           uri: ${STOREFRONT_REACTJS_URI:http://localhost:3000}
           predicates:
             - Path=/**
-#          filters:
-#            - RewritePath=/api/(?<segment>.*), /$\{segment}
 
----
+    data:
+      redis:
+        host: localhost
+        port: 6379
+      session:
+        store-type: redis
 
-spring:
-  config:
-    active:
-      on-profile: "prod"
-
----
 
 service-uri:
   services:
