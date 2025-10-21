@@ -1,3 +1,11 @@
-FROM openjdk:17
-COPY target/storefront-bff*.jar storefront-bff.jar
-ENTRYPOINT ["java", "-jar", "/storefront-bff.jar"]
+FROM maven:3.9.9-eclipse-temurin-21 AS storefront-bff-builder
+WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY --from=storefront-bff-builder /app/target/*.jar app.jar
+EXPOSE 8000
+ENTRYPOINT ["java", "-jar", "app.jar"]
