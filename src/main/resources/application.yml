@@ -28,24 +28,60 @@ spring:
         - id: user
           uri: ${USER_SERVICE_URI:http://localhost:9000}
           predicates:
-            - Path=/api/**
+            - Path=/api/user-service/**
           filters:
             - TokenRelay
             - StripPrefix=1
         - id: cart
           uri: ${CART_SERVICE_URI:http://localhost:9001}
           predicates:
-            - Path=/api/**
+            - Path=/api/cart-service/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+        - id: order
+          uri: ${ORDER_SERVICE_URI:http://localhost:9004}
+          predicates:
+            - Path=/api/order-service/**
           filters:
             - TokenRelay
             - StripPrefix=1
         - id: course
           uri: ${COURSE_SERVICE_URI:http://localhost:9002}
           predicates:
-            - Path=/api/**
+            - Path=/api/course-service/**
           filters:
             - TokenRelay
             - StripPrefix=1
+        - id: enrollment
+          uri: ${ENROLLMENT_SERVICE_URI:http://localhost:9005}
+          predicates:
+            - Path=/api/enrollment-service/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+        - id: notification
+          uri: ${NOTIFICATION_SERVICE_URI:http://localhost:9008}
+          predicates:
+            - Path=/api/notification-service/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+        - id: progress
+          uri: ${PROGRESS_SERVICE_URI:http://localhost:9007}
+          predicates:
+            - Path=/api/progress-service/**
+          filters:
+            - TokenRelay
+            - StripPrefix=1
+        - id: chatbot
+          uri: http://localhost:5000
+          predicates:
+            - Path=/api/**
+          filters:
+            - TokenRelay
+            - StripPrefix=0
+
 #        - id: api
 #          uri: http://api.hajime.local
 #          predicates:
@@ -70,8 +106,8 @@ service-uri:
   services:
     user-service: ${USER_SERVICE_URI:http://localhost:9000}
     token-identity: ${KEYCLOAK_TOKEN_URI:http://identity:8080/realms/CourseRealm/protocol/openid-connect/token}
-  token-id: storefront-bff
-  token-secret: ${KEYCLOAK_CLIENT_SECRET_STOREFRONT:okuONdlbOa8WuTAzeb23tVwPAObA4RUd}
+  token-id: user-management
+  token-secret: ${KEYCLOAK_CLIENT_SECRET_USER=ebyMQYbAe5zxWN2RPVZ5V7t2woDsRZjb}
 
 logging:
   level:
