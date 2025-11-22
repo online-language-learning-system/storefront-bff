@@ -39,48 +39,7 @@ spring:
           filters:
             - TokenRelay
             - StripPrefix=1
-        - id: order
-          uri: ${ORDER_SERVICE_URI:http://localhost:9004}
-          predicates:
-            - Path=/api/order-service/**
-          filters:
-            - TokenRelay
-            - StripPrefix=1
-        - id: course
-          uri: ${COURSE_SERVICE_URI:http://localhost:9002}
-          predicates:
-            - Path=/api/course-service/**
-          filters:
-            - TokenRelay
-            - StripPrefix=1
-        - id: enrollment
-          uri: ${ENROLLMENT_SERVICE_URI:http://localhost:9005}
-          predicates:
-            - Path=/api/enrollment-service/**
-          filters:
-            - TokenRelay
-            - StripPrefix=1
-        - id: notification
-          uri: ${NOTIFICATION_SERVICE_URI:http://localhost:9008}
-          predicates:
-            - Path=/api/notification-service/**
-          filters:
-            - TokenRelay
-            - StripPrefix=1
-        - id: progress
-          uri: ${PROGRESS_SERVICE_URI:http://localhost:9007}
-          predicates:
-            - Path=/api/progress-service/**
-          filters:
-            - TokenRelay
-            - StripPrefix=1
-        - id: chatbot
-          uri: http://localhost:5000
-          predicates:
-            - Path=/api/**
-          filters:
-            - TokenRelay
-            - StripPrefix=0
+
 
 #        - id: api
 #          uri: http://api.hajime.local
